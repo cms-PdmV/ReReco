@@ -52,11 +52,11 @@ class Sequence(ModelBase):
         'conditions': lambda c: ModelBase.matches_regex(c, '[a-zA-Z0-9_]{0,50}'),
         'config_id': lambda cid: ModelBase.matches_regex(cid, '[a-f0-9]{0,50}'),
         '__datatier': lambda s: s in {'ALCARECO', 'AOD', 'DQMIO', 'MINIAOD',
-                                      'NANOAOD', 'RECO', 'USER', 'FEVTDEBUGHLT'},
+                                      'NANOAOD', 'RECO', 'USER', 'FEVTDEBUGHLT', 'RAW'},
         'era': lambda e: ModelBase.matches_regex(e, '[a-zA-Z0-9_\\,]{0,50}'),
         '__eventcontent': lambda s: s in {'ALCARECO', 'AOD', 'DQM', 'MINIAOD',
                                           'NANOAOD', 'NANOEDMAOD', 'RECO', 'FEVT',
-                                          'FEVTDEBUG', 'FEVTDEBUGHLT'},
+                                          'FEVTDEBUG', 'FEVTDEBUGHLT', 'RAW'},
         '_gpu': {
             'requires': lambda r: r in ('forbidden', 'optional', 'required'),
             'cuda_capabilities': lambda l: isinstance(l, list),
