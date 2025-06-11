@@ -167,6 +167,7 @@ class TicketController(ControllerBase):
         not_done = status != 'done'
         editing_info['input'] = not_done
         editing_info['__steps'] = not_done
+        editing_info['job_dict_overwrite'] = not_done
         for step_index, _ in enumerate(obj.get('steps')):
             editing_info['steps'].append({'subcampaign': step_index > 0 and not_done,
                                           'processing_string': step_index > 0 and not_done,
@@ -184,6 +185,7 @@ class TicketController(ControllerBase):
         ticket_prepid = ticket.get_prepid()
         created_requests = []
         request_controller = RequestController()
+        ticket_job_overwrite = ticket.get('job_dict_overwrite')
         with self.locker.get_lock(ticket_prepid):
             ticket = Ticket(json_input=database.get(ticket_prepid))
             created_requests = ticket.get('created_requests')
@@ -201,6 +203,7 @@ class TicketController(ControllerBase):
                     for step_index, step in enumerate(ticket.get('steps')):
                         subcampaign_name = step['subcampaign']
                         new_request_json = {'subcampaign': subcampaign_name,
+                                            'job_dict_overwrite': ticket_job_overwrite,
                                             'priority': step['priority'],
                                             'processing_string': step['processing_string'],
                                             'time_per_event': step['time_per_event'],

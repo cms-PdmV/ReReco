@@ -8,7 +8,7 @@ from core_lib.database.database import Database
 Database.set_credentials_file(os.getenv('DB_AUTH'))
 Database.set_database_name('rereco')
 
-database = Database('requests')
+database = Database('tickets')
 
 total_entries = database.get_count()
 
