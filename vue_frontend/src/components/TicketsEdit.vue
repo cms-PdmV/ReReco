@@ -9,6 +9,13 @@
           <td><input type="text" v-model="editableObject.prepid" :disabled="!editingInfo.prepid"></td>
         </tr>
         <tr>
+          <td>Job dict overwrite</td>
+          <td>
+            <span class="show-job-dict-overwrite" v-if="!showJobDictOverwrite" v-on:click="toggleJobDictOverwrite()">Edit</span>
+            <JSONField v-show="showJobDictOverwrite" v-model="editableObject.job_dict_overwrite" :disabled="!editingInfo.job_dict_overwrite"/>
+          </td>
+        </tr>
+        <tr>
           <td>Steps ({{listLength(editableObject.steps)}})</td>
           <td>
             <div v-for="(step, index) in editableObject.steps" :key="index">
@@ -155,12 +162,14 @@ import axios from 'axios'
 import { utilsMixin } from '../mixins/UtilsMixin.js'
 import LoadingOverlay from './LoadingOverlay.vue'
 import Autocompleter from './Autocompleter.vue'
+import JSONField from './JSONField.vue'
 
 export default {
   name: 'TicketsEdit',
   components: {
     LoadingOverlay,
-    Autocompleter
+    Autocompleter,
+    JSONField
   },
   mixins: [
     utilsMixin
@@ -170,6 +179,7 @@ export default {
       prepid: undefined,
       editableObject: {},
       editingInfo: {},
+      showJobDictOverwrite: false,
       loading: true,
       creatingNew: true,
       errorDialog: {
@@ -219,6 +229,7 @@ export default {
           templateInfo.input = templateInfo.input.filter(Boolean).join('\n');
           component.editableObject = templateInfo;
           component.editingInfo = editingInfo;
+          component.showJobDictOverwrite = Object.keys(component.editableObject.job_dict_overwrite) != 0;
           component.loading = false;
         }).catch(error => {
           component.loading = false;
@@ -232,6 +243,7 @@ export default {
         }
         component.editableObject = objectInfo;
         component.editingInfo = editingInfo;
+        component.showJobDictOverwrite = Object.keys(component.editableObject.job_dict_overwrite) != 0;
         if (component.creatingNew) {
           component.addStep();
         }
@@ -402,6 +414,27 @@ export default {
         window.location = 'subcampaigns?prepid=' + this.prepid;
       }
     },
+    toggleJobDictOverwrite: function() {
+      if (this.showJobDictOverwrite) {
+        this.showJobDictOverwrite = false;
+        return;
+      }
+      const component = this;
+      if (confirm('Are you sure you know what you are doing? This is a very dangerous action!')) {
+        component.showJobDictOverwrite = true;
+      }
+    },
   }
 }
 </script>
+
+<style>
+.show-job-dict-overwrite {
+  color: var(--v-anchor-base);
+  cursor: pointer;
+}
+.show-job-dict-overwrite:hover {
+  color: red;
+  font-weight: 700;
+}
+</style>

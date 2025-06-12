@@ -28,6 +28,9 @@ class Ticket(ModelBase):
         'status': 'new',
         # List of dicts that have subcampaign, processing_string, size/time per event values
         'steps': [],
+        # Manual overwrite of job dictionary for the request to be created
+        # a default template for them
+        'job_dict_overwrite': {},
     }
 
     lambda_checks = {
